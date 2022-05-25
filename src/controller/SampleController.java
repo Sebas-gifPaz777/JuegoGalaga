@@ -21,8 +21,6 @@ public class SampleController implements Initializable {
     private final int SPEED = 4;
     private Main main;
     private GraphicsContext gc;
-    private Box box;
-    private final Player player = new Player(575, 750, 4);
     public Sprite background = new Sprite("resources/FondoGalaga.jpeg");
     public Image spaceShipImage = new Image("resources/Navecita.png");
 
