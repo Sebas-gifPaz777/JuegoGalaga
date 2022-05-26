@@ -36,18 +36,31 @@ public class Sprite {
         return this.getBoundary().overLaps(other.getBoundary());
     }
 
-    public void wrap(double screenWidth, double screenHeight){
+    public void wrap(double screenWidth, double screenHeight) {
 
-        double halfWidth = this.image.getWidth()/2;
-        double halfHeight = this.image.getHeight()/2;
-    //Metodo para evitar que la nave desaparezca, así que aparece al otro lado de la pantalla
+        //Para que el sprite no pase los límites de la pantalla
+        if (this.position.x < 0) {
+            this.position.x = screenWidth;
+        }
+        if (this.position.x > screenWidth) {
+            this.position.x = 0;
+        }
+        if (this.position.y < 0) {
+            this.position.y = screenHeight;
+        }
+        if (this.position.y > screenHeight) {
+            this.position.y = 0;
+        }
+
+        double halfWidth = this.image.getWidth() / 2;
+        double halfHeight = this.image.getHeight() / 2;
         if (this.position.x + halfWidth < 0)
-            this.position.x = halfWidth;
-        if (this.position.x > halfWidth)
+            this.position.x = screenWidth + halfWidth;
+        if (this.position.x > screenWidth + halfWidth)
             this.position.x = -halfWidth;
-        if (this.position.y + halfHeight< 0)
+        if (this.position.y + halfHeight < 0)
             this.position.y = screenHeight + halfHeight;
-        if (this.position.y > screenHeight+ halfHeight)
+        if (this.position.y > screenHeight + halfHeight)
             this.position.y = -halfHeight;
     }
 
@@ -55,6 +68,10 @@ public class Sprite {
         //Actualizar la posición, dependiendo la velocidad
         this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime);
         this.wrap(1200, 850); //Tamaño del canvas
+        //Para que el sprite no se mueva
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+
     }
 
     public void render(GraphicsContext gc){
