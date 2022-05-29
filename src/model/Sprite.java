@@ -42,30 +42,17 @@ public class Sprite extends Thread {
         return this.getBoundary().overLaps(other.getBoundary()); //Devolver true si está sobre otro  (false si no está)
     }
 
-    public void wrap(double screenWidth, double screenHeight) { //Método para que el sprite no se salga del canvas
+    public void wrap(double screenWidth) { //Método para que el sprite no se salga del canvas
         //Para que el sprite rebote en el canvas
-        if (this.position.x < 0) { //Si la posición x es menor que 0
-            this.position.x = screenWidth; //La posición x es igual a la anchura del canvas
-        } else if (this.position.x > screenWidth) { //Si la posición x es mayor que la anchura del canvas
-            this.position.x = 0; //La posición x es igual a 0
+        if (this.position.x <= 0) { //Si la posición x es menor que 0
+            this.position.x = 0; //La posición x es igual a la anchura del canvas
+        } else if (this.position.x+70 >= screenWidth) { //Si la posición x es mayor que la anchura del canvas
+            this.position.x = screenWidth-70; //La posición x es igual a 0
         }
-        if (this.position.y < 0) { //Si la posición y es menor que 0
-            this.position.y = screenHeight; //La posición y es igual a la altura del canvas
-        }
-        else if (this.position.y > screenHeight) { //Si la posición y es mayor que la altura del canvas
-            this.position.y = 0; //La posición y es igual a 0
-        }
-
     }
 
-    public void update(double deltaTime){ //Método para actualizar el sprite (deltaTime es el tiempo que ha pasado desde el último frame)
-        //Actualizar la posición, dependiendo la velocidad y el tiempo que ha pasado desde el último frame
-        //this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime); //Añadir la velocidad al vector de posición
-        this.wrap(750, 550); //Tamaño del canvas (1200, 850)
-        //Para que el sprite no se mueva más rápido que la velocidad máxima del sprite  (si la velocidad es mayor que la velocidad máxima del sprite)
-        this.velocity.x = 0;
-        this.velocity.y = 0;
-
+    public void update(){ //Método para actualizar el sprite (deltaTime es el tiempo que ha pasado desde el último frame)
+        this.wrap(750); //Tamaño del canvas (1200, 850)
     }
 
     public void render(GraphicsContext gc){ //Método para dibujar el sprite (gc es el contexto gráfico) (dibuja el sprite en la posición actual)

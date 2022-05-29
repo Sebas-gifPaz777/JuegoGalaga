@@ -1,12 +1,14 @@
 package controller;
 
-import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import model.Sprite;
 
 import java.net.URL;
@@ -16,10 +18,8 @@ import java.util.ResourceBundle;
 public class SampleController implements Initializable {
 	
 	private boolean play;
-	private AnimationTimer gameLoop;
 	private ArrayList<Sprite> enemies;
 	private SampleController main= this;
-	private AnimationTimer at;
 	private int n1=0;
     @FXML
     private Canvas canvas;
@@ -69,60 +69,41 @@ public class SampleController implements Initializable {
           	n=1;
           }
           
-       at = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                background = new Sprite("resources/FondoGalaga.jpeg");
-                background.position.set(375, 275); //Posición del fondo
+          background = new Sprite("resources/FondoGalaga.jpeg");
+          background.position.set(375, 275); //Posición del fondo
 
-                spaceShip = new Sprite("resources/Navecita.png");
-                spaceShip.position.set(340, 530); //Posición inicial
-                spaceShip.velocity.set(40, 0); //Velocidad inicial
+          spaceShip = new Sprite("resources/Navecita.png");
+          spaceShip.position.set(340, 530); //Posición inicial
+          spaceShip.velocity.set(40, 0); //Velocidad inicial
 
-                background.render(gc); //Dibuja el fondo en el canvas
-            }
-        };
-        at.start();
+          background.render(gc); //Dibuja el fondo en el canvas
+          gc.setStroke(Color.RED);
+          gc.setFont(new Font(30));
+          gc.strokeText("PRESIONE R PARA INICIAR", 200, 340);
+          gc.drawImage(new Image("resources/Logito.png"), 200, 100, 400, 200);
+         
     }
 
     @FXML
     private void keyPressed(KeyEvent e) {
-        gameLoop = new AnimationTimer() {  //Crea una animación de juego
-            @Override
-            public void handle(long now) { //Método que se ejecuta cada vez que se actualiza la animación
-                if(e.getCode().toString().equals("LEFT") || e.getCode().toString().equals("A")){ //Si se presiona la tecla izquierda
-                    spaceShip.position.set(spaceShip.position.x - 12, spaceShip.position.y);  //Mueve la nave a la izquierda
-                }
-                if(e.getCode().toString().equals("RIGHT") || e.getCode().toString().equals("D")){ //Si se presiona la tecla derecha
-                    spaceShip.position.set(spaceShip.position.x + 12, spaceShip.position.y); //Mueve la nave a la derecha
-                }
-                spaceShip.update(1/150.0);
-                //Dibujar el fondo
-                background.render(gc);
-                //Dibujar la nave
+    	if(e.getCode().toString().equals("LEFT") || e.getCode().toString().equals("A")){ //Si se presiona la tecla izquierda
+    		spaceShip.position.set(spaceShip.position.x - 12, spaceShip.position.y);  //Mueve la nave a la izquierda
+    	}
+    	if(e.getCode().toString().equals("RIGHT") || e.getCode().toString().equals("D")){ //Si se presiona la tecla derecha
+    		spaceShip.position.set(spaceShip.position.x + 12, spaceShip.position.y); //Mueve la nave a la derecha
+    	}
+    	if(e.getCode().toString().equals("R") && n1==0) {
+    		contiUpdate();
+    	}
 
-                gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
-                for(Sprite enemy:enemies) {
-                	gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
-                }
-            }
-        };
-       
-        gameLoop.start();
-        if(n1==0) {
-        	for(Sprite enemy:enemies) {
-        		enemy.start();
-        	}
-        	n1++;
-        }
     }
     
     public boolean checkEnemy(Sprite enemy) {
-    	if(enemy.position.y+70 >= spaceShip.position.y+12) {
+    	if(enemy.position.y+70 >= spaceShip.position.y+13) {
     		if(enemy.position.x <= spaceShip.position.x+70 && enemy.position.x >= spaceShip.position.x
     				|| enemy.position.x+70 >= spaceShip.position.x && enemy.position.x+70 <= spaceShip.position.x+70 ) {
     			gameOver();
-    			gc.drawImage(new Image("resources/explosion.png"), spaceShip.position.x, spaceShip.position.y, 70, 70);
+    			gc.drawImage(new Image("resources/Explosion.png"), spaceShip.position.x, spaceShip.position.y, 70, 70);
     		}
     		else if(enemy.position.y+70 >= canvas.getHeight()) {
     			gameOver();
@@ -133,13 +114,48 @@ public class SampleController implements Initializable {
     }
     
     public void gameOver() {
-    	gameLoop.stop();
-    	at.stop();
-    	spaceShip.position.set(340, 530);
 		play=false;
 		background.render(gc);
 		for(Sprite enemy1 : enemies) {
 			gc.drawImage(enemy1.image, enemy1.position.x, enemy1.position.y, 70, 70);
 		}
 	}
+    
+    public void updateSprites() {
+    	if(play) {
+    		spaceShip.update();
+            //Dibujar el fondo
+            background.render(gc);
+            //Dibujar la nave
+
+            gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
+            for(Sprite enemy:enemies) {
+            	gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
+            }
+            
+            if(n1==0) {
+            	for(Sprite enemy:enemies) {
+            		enemy.start();
+            		System.out.println("ok");
+            	}
+            	n1++;
+            }
+    	}
+    }
+    
+    public void contiUpdate() {
+    	Thread thread = new Thread(() ->{
+    		while(play) {
+    			try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			Platform.runLater(()->{
+    				updateSprites();
+    			});
+    		}
+    	}); thread.start();
+    }
 }
