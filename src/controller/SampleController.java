@@ -20,6 +20,7 @@ public class SampleController implements Initializable {
 	private ArrayList<Sprite> enemies;
 	private SampleController main= this;
 	private AnimationTimer at;
+	private int n1=0;
     @FXML
     private Canvas canvas;
 
@@ -68,7 +69,7 @@ public class SampleController implements Initializable {
           	n=1;
           }
           
-        AnimationTimer at = new AnimationTimer() {
+       at = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 background = new Sprite("resources/FondoGalaga.jpeg");
@@ -95,7 +96,7 @@ public class SampleController implements Initializable {
                 if(e.getCode().toString().equals("RIGHT") || e.getCode().toString().equals("D")){ //Si se presiona la tecla derecha
                     spaceShip.position.set(spaceShip.position.x + 12, spaceShip.position.y); //Mueve la nave a la derecha
                 }
-                spaceShip.update(1/144.0);
+                spaceShip.update(1/150.0);
                 //Dibujar el fondo
                 background.render(gc);
                 //Dibujar la nave
@@ -106,18 +107,20 @@ public class SampleController implements Initializable {
                 }
             }
         };
+       
         gameLoop.start();
-        /*
-        for(Sprite enemy:enemies) {
-        	enemy.start();
-        }*/
+        if(n1==0) {
+        	for(Sprite enemy:enemies) {
+        		enemy.start();
+        	}
+        	n1++;
+        }
     }
     
     public boolean checkEnemy(Sprite enemy) {
     	if(enemy.position.y+70 >= spaceShip.position.y+12) {
     		if(enemy.position.x <= spaceShip.position.x+70 && enemy.position.x >= spaceShip.position.x
     				|| enemy.position.x+70 >= spaceShip.position.x && enemy.position.x+70 <= spaceShip.position.x+70 ) {
-    			System.out.println("Choco");
     			gameOver();
     			gc.drawImage(new Image("resources/explosion.png"), spaceShip.position.x, spaceShip.position.y, 70, 70);
     		}
@@ -130,8 +133,9 @@ public class SampleController implements Initializable {
     }
     
     public void gameOver() {
-		gameLoop.stop();
-		at.stop();
+    	gameLoop.stop();
+    	at.stop();
+    	spaceShip.position.set(340, 530);
 		play=false;
 		background.render(gc);
 		for(Sprite enemy1 : enemies) {

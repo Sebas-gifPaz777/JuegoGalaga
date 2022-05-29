@@ -60,7 +60,7 @@ public class Sprite extends Thread {
 
     public void update(double deltaTime){ //Método para actualizar el sprite (deltaTime es el tiempo que ha pasado desde el último frame)
         //Actualizar la posición, dependiendo la velocidad y el tiempo que ha pasado desde el último frame
-        this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime); //Añadir la velocidad al vector de posición
+        //this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime); //Añadir la velocidad al vector de posición
         this.wrap(750, 550); //Tamaño del canvas (1200, 850)
         //Para que el sprite no se mueva más rápido que la velocidad máxima del sprite  (si la velocidad es mayor que la velocidad máxima del sprite)
         this.velocity.x = 0;
