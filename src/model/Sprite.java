@@ -1,20 +1,26 @@
 package model;
 
+import controller.SampleController;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public class Sprite {
+public class Sprite extends Thread {
     public Vector position; // Position of the sprite
     public Vector velocity; // Velocity of the sprite
     public double rotation; // Rotation of the sprite un degrees
     public Rectangle boundary; // Boundary of the sprite
     public Image image; // Image of the sprite
+    public boolean next;
+    public SampleController main;
+
 
     public Sprite(){ //Constructor
         this.position = new Vector(); //Posición inicial
         this.velocity = new Vector(); //Velocidad inicial
         this.rotation = 0; //Rotación inicial
         this.boundary = new Rectangle(); //Borde inicial
+        this.next=true;
     }
 
     public Sprite(String imageFileName){ //Constructor con parámetros
@@ -70,4 +76,24 @@ public class Sprite {
         gc.drawImage(this.image, 0, 0); //Dibujar el sprite en la posición actual  (para poder dibujar el sprite en la posición actual)
         gc.restore(); //Restaurar el contexto gráfico  (para poder dibujar el sprite en la posición actual)
     }
+    
+    @Override
+	public void run() {
+		try {
+			Thread.sleep(2000);
+			while(next) {
+				position.set(position.x,position.y+10);
+				Platform.runLater(() ->{
+					next=main.checkEnemy(this);
+				});
+				Thread.sleep(1000);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+    public void setMain(SampleController main) {
+    	this.main=main;
+    }
+
 }
