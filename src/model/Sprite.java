@@ -37,33 +37,25 @@ public class Sprite {
     }
 
     public void wrap(double screenWidth, double screenHeight) { //Método para que el sprite no se salga del canvas
-
-        //Para que el sprite no pase los límites de la pantalla
-        if (this.position.x < 0)//Si la posición x es menor que 0
-            this.position.x = screenWidth; //La posición x es igual a la anchura de la pantalla
-        if (this.position.x > screenWidth)//Si la posición x es mayor que la anchura de la pantalla
+        //Para que el sprite rebote en el canvas
+        if (this.position.x < 0) { //Si la posición x es menor que 0
+            this.position.x = screenWidth; //La posición x es igual a la anchura del canvas
+        } else if (this.position.x > screenWidth) { //Si la posición x es mayor que la anchura del canvas
             this.position.x = 0; //La posición x es igual a 0
-        if (this.position.y < 0)//Si la posición y es menor que 0
-            this.position.y = screenHeight; //La posición y es igual a la altura de la pantalla
-        if (this.position.y > screenHeight)//Si la posición y es mayor que la altura de la pantalla
+        }
+        if (this.position.y < 0) { //Si la posición y es menor que 0
+            this.position.y = screenHeight; //La posición y es igual a la altura del canvas
+        }
+        else if (this.position.y > screenHeight) { //Si la posición y es mayor que la altura del canvas
             this.position.y = 0; //La posición y es igual a 0
+        }
 
-        double halfWidth = this.image.getWidth() / 2; //Obtener la mitad de la anchura del sprite  (anchura del sprite / 2)
-        double halfHeight = this.image.getHeight() / 2; //Obtener la mitad de la altura del sprite  (altura del sprite / 2)
-        if (this.position.x + halfWidth < 0) //Si la posición x + la mitad de la anchura del sprite es menor que 0  (si el sprite se sale de la pantalla)
-            this.position.x = screenWidth + halfWidth; //La posición x es igual a la anchura de la pantalla + la mitad de la anchura del sprite
-        if (this.position.x > screenWidth + halfWidth) //Si la posición x + la mitad de la anchura del sprite es mayor que la anchura de la pantalla  (si el sprite se sale de la pantalla)
-            this.position.x = -halfWidth; //La posición x es igual a - la mitad de la anchura del sprite
-        if (this.position.y + halfHeight < 0) //Si la posición y + la mitad de la altura del sprite es menor que 0  (si el sprite se sale de la pantalla)
-            this.position.y = screenHeight + halfHeight; //La posición y es igual a la altura de la pantalla + la mitad de la altura del sprite
-        if (this.position.y > screenHeight + halfHeight) //Si la posición y + la mitad de la altura del sprite es mayor que la altura de la pantalla  (si el sprite se sale de la pantalla)
-            this.position.y = -halfHeight; //La posición y es igual a - la mitad de la altura del sprite
     }
 
     public void update(double deltaTime){ //Método para actualizar el sprite (deltaTime es el tiempo que ha pasado desde el último frame)
         //Actualizar la posición, dependiendo la velocidad y el tiempo que ha pasado desde el último frame
         this.position.add(this.velocity.x * deltaTime, this.velocity.y * deltaTime); //Añadir la velocidad al vector de posición
-        this.wrap(1200, 850); //Tamaño del canvas (1200, 850)
+        this.wrap(750, 550); //Tamaño del canvas (1200, 850)
         //Para que el sprite no se mueva más rápido que la velocidad máxima del sprite  (si la velocidad es mayor que la velocidad máxima del sprite)
         this.velocity.x = 0;
         this.velocity.y = 0;
