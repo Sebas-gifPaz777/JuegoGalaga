@@ -25,10 +25,12 @@ public class Sprite extends Thread {
         this.boundary = new Rectangle(); //Borde inicial
         this.next=true;
         
-        dead = false;
-        
+        dead = false;      
     }
-  
+    public Sprite(double x, double y, double w, double h) {
+    	boundary = new Rectangle(x, y, w, h);
+    	position = new Vector(x, y);
+    }
     
 
     public Sprite(String imageFileName){ //Constructor con parámetros
@@ -45,9 +47,16 @@ public class Sprite extends Thread {
         this.boundary.setPosition(this.position.x, this.position.y); //Posición del borde
         return this.boundary; //Devolver el borde
     }
+    public void setBoundary(Rectangle boundary) {
+		this.boundary = boundary;
+	}
 
     public boolean overLaps(Sprite other){ //Método para comprobar si el sprite está sobre otro  (true si está)
         return this.getBoundary().overLaps(other.getBoundary()); //Devolver true si está sobre otro  (false si no está)
+    }
+    public void setY(double y) {
+    	this.position.y = y;
+    	this.boundary.y = y;
     }
 
     public void wrap(double screenWidth) { //Método para que el sprite no se salga del canvas

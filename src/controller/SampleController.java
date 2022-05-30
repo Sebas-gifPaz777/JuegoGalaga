@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import model.Rectangle;
 import model.Shot;
 import model.Sprite;
 
@@ -57,10 +58,12 @@ public class SampleController implements Initializable {
           for (int i = 0; i < 2; i++) {  //Crea 10 enemigos
           	for (int j = 0; j < 5; j++) {
           		Sprite enemy = new Sprite();  //Crea un enemigo
-          		enemy.position.set(Math.random()*(max-min+1)+min, Math.random()*(maxy-miny+1)+miny);  //Posición aleatoria
+          		double x = Math.random()*(max-min+1)+min;
+          		double y = Math.random()*(maxy-miny+1)+miny;
+          		enemy.position.set(x, y);  //Posición aleatoria
           		enemy.velocity.set(Math.random() * 10, Math.random() * 10); //Velocidad aleatoria
           		enemy.image= new Image("resources/Marcianito.png"); //Asigna la imagen
-          		enemy.boundary.setSize(70, 70);
+          		enemy.setBoundary( new Rectangle(x, y, 70, 70));
           		enemy.setMain(main);
           		
           		enemies.add(enemy); //Agrega el enemigo a la lista
@@ -144,8 +147,19 @@ public class SampleController implements Initializable {
             //Dibujar la nave
 
             gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
+            int pos = 0;
             for(Sprite enemy:enemies) {
+            	
+            	for (Shot shot : bullets) {
+					if(enemy.overLaps(shot)) {
+						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+						enemies.remove(pos);
+					}
+				}
             	gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
+            	pos++;
             }
             
             for(Shot s : bullets) {
