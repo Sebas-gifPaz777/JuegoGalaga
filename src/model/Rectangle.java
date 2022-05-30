@@ -23,7 +23,7 @@ public class Rectangle {
         this.x = x;
         this.y = y;
     }
-
+    
     public void setSize(double w, double h){ //Metodo para cambiar el tamaño del rectangulo
         this.width = w;
         this.height = h;
@@ -41,4 +41,11 @@ public class Rectangle {
                 || this.y + this.height < other.y || other.y + other.height < this.y;  //Si alguno de los casos se cumple, no se sobrepone
         return !noOverLap; //Si no se sobrepone, retorna true, si se sobrepone, retorna false
     }
+    
+    public double getX() {
+		return x;
+	}
+    public double getY() {
+		return y;
+	}
 }

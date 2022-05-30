@@ -13,6 +13,9 @@ public class Sprite extends Thread {
     public Image image; // Image of the sprite
     public boolean next;
     public SampleController main;
+    
+    boolean dead;
+    String type;
 
 
     public Sprite(){ //Constructor
@@ -21,7 +24,12 @@ public class Sprite extends Thread {
         this.rotation = 0; //Rotación inicial
         this.boundary = new Rectangle(); //Borde inicial
         this.next=true;
+        
+        dead = false;
+        
     }
+  
+    
 
     public Sprite(String imageFileName){ //Constructor con parámetros
         this(); //Llamada al constructor sin parámetros
@@ -82,5 +90,10 @@ public class Sprite extends Thread {
     public void setMain(SampleController main) {
     	this.main=main;
     }
-
+    
+    public Shot shoot() {
+		//return new Shot( getBoundary().getX() + getBoundary().width/2 - Shot.SIZE/2, getBoundary().getY() - Shot.SIZE );
+    	return new Shot( getBoundary().getX() +30, getBoundary().getY() - Shot.SIZE );
+    	
+    }
 }

@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import model.Shot;
 import model.Sprite;
 
 import java.net.URL;
@@ -18,7 +19,11 @@ import java.util.ResourceBundle;
 public class SampleController implements Initializable {
 	
 	private boolean play;
+	
 	private ArrayList<Sprite> enemies;
+	
+	private ArrayList<Shot> bullets;
+	
 	private SampleController main= this;
 	private int n1=0;
     @FXML
@@ -57,6 +62,7 @@ public class SampleController implements Initializable {
           		enemy.image= new Image("resources/Marcianito.png"); //Asigna la imagen
           		enemy.boundary.setSize(70, 70);
           		enemy.setMain(main);
+          		
           		enemies.add(enemy); //Agrega el enemigo a la lista
           		min=(140*n);
           		max=(140*(n+1))-70;
@@ -68,6 +74,8 @@ public class SampleController implements Initializable {
           	min=0;
           	n=1;
           }
+          
+          bullets = new ArrayList<>();
           
           background = new Sprite("resources/FondoGalaga.jpeg");
           background.position.set(375, 275); //Posición del fondo
@@ -92,13 +100,20 @@ public class SampleController implements Initializable {
     	if(e.getCode().toString().equals("RIGHT") || e.getCode().toString().equals("D")){ //Si se presiona la tecla derecha
     		spaceShip.position.set(spaceShip.position.x + 12, spaceShip.position.y); //Mueve la nave a la derecha
     	}
+    	if(e.getCode().toString().equals("SPACE") ){ //Si se presiona la tecla ESPACIO
+    		shoot(spaceShip); //Dispara
+    	}
     	if(e.getCode().toString().equals("R") && n1==0) {
     		contiUpdate();
     	}
 
     }
     
-    public boolean checkEnemy(Sprite enemy) {
+    private void shoot(Sprite s) {
+		bullets.add(s.shoot());
+	}
+
+	public boolean checkEnemy(Sprite enemy) {
     	if(enemy.position.y+70 >= spaceShip.position.y+13) {
     		if(enemy.position.x <= spaceShip.position.x+70 && enemy.position.x >= spaceShip.position.x
     				|| enemy.position.x+70 >= spaceShip.position.x && enemy.position.x+70 <= spaceShip.position.x+70 ) {
@@ -131,6 +146,11 @@ public class SampleController implements Initializable {
             gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
             for(Sprite enemy:enemies) {
             	gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
+            }
+            
+            for(Shot s : bullets) {
+            	s.update();
+            	s.render(gc);
             }
             
             if(n1==0) {

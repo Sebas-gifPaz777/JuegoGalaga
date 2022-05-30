@@ -58,4 +58,5 @@ public class Vector {
         this.x = L * Math.cos(angleRadians); //Longitud * cos(angulo) = x del vector en coordenadas cartesianas (0-L) -> (0-2PI) -> (0-360)
         this.y = L * Math.sin(angleRadians); //Longitud * sin(angulo) = y del vector en coordenadas cartesianas (0-L) -> (0-2PI) -> (0-360)
     }
+    
 }
