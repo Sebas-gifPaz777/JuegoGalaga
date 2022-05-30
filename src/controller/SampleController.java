@@ -15,6 +15,7 @@ import model.Sprite;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.ResourceBundle;
 
 public class SampleController implements Initializable {
@@ -124,10 +125,16 @@ public class SampleController implements Initializable {
     				|| enemy.position.x+70 >= spaceShip.position.x && enemy.position.x+70 <= spaceShip.position.x+70 ) {
     			gameOver();
     			gc.drawImage(new Image("resources/Explosion.png"), spaceShip.position.x, spaceShip.position.y, 70, 70);
+    			gc.setStroke(Color.RED);
+        		gc.setFont(new Font(50));
+        		gc.strokeText("GAME OVER", 220, 340);
     		}
     		else if(enemy.position.y+70 >= canvas.getHeight()) {
     			gameOver();
     			gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
+    			gc.setStroke(Color.RED);
+        		gc.setFont(new Font(50));
+        		gc.strokeText("GAME OVER", 220, 340);
     		}
     	}
     	return play;
@@ -139,6 +146,13 @@ public class SampleController implements Initializable {
 		for(Sprite enemy1 : enemies) {
 			gc.drawImage(enemy1.image, enemy1.position.x, enemy1.position.y, 70, 70);
 		}
+		gc.setFill(Color.WHITE);
+		gc.setFont(new Font("Arial Black", 32));
+		gc.setLineWidth(3);
+		String txt = "Score: " + score;
+		int txtX = 550;
+		int txtY = 50;
+		gc.fillText(txt, txtX, txtY);
 	}
     
     public void updateSprites() {
@@ -150,31 +164,52 @@ public class SampleController implements Initializable {
 
             gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
             int pos = 0;
-            for(Sprite enemy:enemies) {
-            	for (Shot shot : bullets) {
-					if(enemy.overLaps(shot)) {
-						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
-						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
-						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
-						enemies.remove(pos);
-						score += 100;
-					}
-				}
-				//Draw score on screen
-				gc.setFill(Color.WHITE);
-				gc.setFont(new Font("Arial Black", 32));
-				gc.setLineWidth(3);
-				String txt = "Score: " + score;
-				int txtX = 550;
-				int txtY = 50;
-				gc.fillText(txt, txtX, txtY);
-				gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
-            	pos++;
+            try {
+            	for(Sprite enemy:enemies) {
+                	int pos2=0;
+                	for (Shot shot : bullets) {
+    					if(enemy.overLaps(shot)) {
+    						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+    						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+    						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
+    						enemies.get(pos).setNext();
+    						bullets.remove(pos2);
+    						enemies.remove(pos);
+    						score += 100;
+    					}
+    				}
+    				//Draw score on screen
+    				gc.setFill(Color.WHITE);
+    				gc.setFont(new Font("Arial Black", 32));
+    				gc.setLineWidth(3);
+    				String txt = "Score: " + score;
+    				int txtX = 550;
+    				int txtY = 50;
+    				gc.fillText(txt, txtX, txtY);
+    				gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
+                	pos++;
+                }
+                
+                for(Shot s : bullets) {
+                	if(s.getPosY()!=0) {
+                		s.update();
+                		s.render(gc);
+                	}
+                	else {
+                		bullets.remove(s);
+                	}
+                }
+            }catch(ConcurrentModificationException e) {
+            	
             }
             
-            for(Shot s : bullets) {
-            	s.update();
-            	s.render(gc);
+            
+            if(enemies.size()==0) {
+            	gameOver();
+            	gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
+            	gc.setStroke(Color.GREEN);
+        		gc.setFont(new Font(50));
+        		gc.strokeText("YOU WON!!", 220, 340);
             }
             
             if(n1==0) {

@@ -106,4 +106,7 @@ public class Sprite extends Thread {
     	return new Shot( getBoundary().getX() +30, getBoundary().getY() - Shot.SIZE );
     	
     }
+	public void setNext() {
+		next=false;
+	}
 }

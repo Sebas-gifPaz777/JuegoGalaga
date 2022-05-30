@@ -28,4 +28,7 @@ public class Shot extends Sprite{
 		gc.fillOval(posX, posY, SIZE, SIZE);
 	}
 	
+	public double getPosY() {
+		return posY;
+	}
 }
