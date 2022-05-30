@@ -89,7 +89,8 @@ public class Sprite extends Thread {
 	}
     public void setMain(SampleController main) {
     	this.main=main;
-    }
+    } 
+    
     
     public Shot shoot() {
 		//return new Shot( getBoundary().getX() + getBoundary().width/2 - Shot.SIZE/2, getBoundary().getY() - Shot.SIZE );
