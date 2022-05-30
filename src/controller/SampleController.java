@@ -177,6 +177,7 @@ public class SampleController implements Initializable {
     						enemies.remove(pos);
     						score += 100;
     					}
+				pos2++;
     				}
     				//Draw score on screen
     				gc.setFill(Color.WHITE);
