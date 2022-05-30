@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class SampleController implements Initializable {
+
+	private int score = 0;
 	
 	private boolean play;
 	
@@ -140,7 +142,7 @@ public class SampleController implements Initializable {
 	}
     
     public void updateSprites() {
-    	if(play) {
+		if(play) {
     		spaceShip.update();
             //Dibujar el fondo
             background.render(gc);
@@ -149,16 +151,24 @@ public class SampleController implements Initializable {
             gc.drawImage(spaceShip.image, spaceShip.position.x, spaceShip.position.y, 70, 70);
             int pos = 0;
             for(Sprite enemy:enemies) {
-            	
             	for (Shot shot : bullets) {
 					if(enemy.overLaps(shot)) {
 						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
 						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
 						gc.drawImage(new Image("resources/Explosion.png"), enemy.position.x, enemy.position.y, 70, 70);
 						enemies.remove(pos);
+						score += 100;
 					}
 				}
-            	gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
+				//Draw score on screen
+				gc.setFill(Color.WHITE);
+				gc.setFont(new Font("Arial Black", 32));
+				gc.setLineWidth(3);
+				String txt = "Score: " + score;
+				int txtX = 550;
+				int txtY = 50;
+				gc.fillText(txt, txtX, txtY);
+				gc.drawImage(enemy.image,  enemy.position.x,  enemy.position.y, 70, 70);
             	pos++;
             }
             
